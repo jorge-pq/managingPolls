@@ -28,7 +28,7 @@ export default gql`
  }
  
  extend type Mutation {
-  signUp(name: String!, username: String!, password: String!,email: String!, web: String!, city: String!, phone: String!, country: String!): User
+  signUp(name: String!, username: String!, password: String!,email: String, web: String, city: String, phone: String, country: String): User
   signIn(username: String!, password: String!): String!
   changeRol(username: String!, role: String!): User @auth
   changePassword(passwordOld: String!, passwordNew: String!): User @auth

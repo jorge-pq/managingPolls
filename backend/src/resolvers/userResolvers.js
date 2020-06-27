@@ -45,11 +45,16 @@ export default {
         }
     },
     Mutation:{
-        signUp: async (root, args) => {
+        signUp: async (root, args, {res} ) => {
 
-            await Joi.validate(args, signUp, { abortEarly: false })
+          const result = Joi.validate(args, signUp);
+            if( result.error ) {
+                return new UserInputError(result.error.details[0].context.label)
+                }
+
             const user = await User.create(args)
             return user
+
         },
         signIn: async (root, args) => {
             const user = await Auth.attemptSignIn(args.username, args.password)

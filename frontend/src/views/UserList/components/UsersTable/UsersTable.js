@@ -20,6 +20,8 @@ import {
 } from '@material-ui/core';
 
 import { getInitials } from '../../../../helpers';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -41,10 +43,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const GET_USERS = gql`
+  {
+    users {
+      id
+      username
+      name
+    }
+  }
+`;
+
 const UsersTable = props => {
   const { className, users, ...rest } = props;
 
   const classes = useStyles();
+
+  const { loading, error, data } = useQuery(GET_USERS);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -92,7 +106,11 @@ const UsersTable = props => {
     setRowsPerPage(event.target.value);
   };
 
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
+
   return (
+   
     <Card
       {...rest}
       className={clsx(classes.root, className)}

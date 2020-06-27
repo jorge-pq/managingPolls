@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import validate from 'validate';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { makeStyles } from '@material-ui/styles';
+import Alert from '@material-ui/lab/Alert';
 import {
   Grid,
   Button,
@@ -16,6 +16,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { onError } from 'apollo-link-error';
 
 
 const useStyles = makeStyles(theme => ({
@@ -111,6 +112,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const SignUpMutation = gql`
+  mutation SignUp($username: String!,$name: String!,$password: String!) {
+    signUp(username: $username, name: $name, password:$password) {
+      username
+      name
+    }
+  }
+`;
+
 const SignUp = props => {
   const { history } = props;
 
@@ -122,12 +132,11 @@ const SignUp = props => {
     	password:''
   });
 
-
   const handleChange = event => {
-
+  
     setFormState({
       ...formState,
-        [event.target.name]: event.target.value
+        [event.target.name]: event.target.value,
     });
   };
 
@@ -135,11 +144,20 @@ const SignUp = props => {
     history.goBack();
   };
 
+  const [signUp, { loading, error }] = useMutation(SignUpMutation, {
+    onError(err) {
+      console.log(err);
+    },
+    onCompleted(){
+      history.push('/sign-in');
+    }
+  });
+ 
+
   const handleSignUp = event => {
     event.preventDefault();
-    history.push('/');
+      signUp({ variables: { username: formState.username, name: formState.fullname, password: formState.password }})
   };
-
 
   return (
     <div className={classes.root}>
@@ -160,6 +178,7 @@ const SignUp = props => {
               >
                 Sign up on our polls web site.
               </Typography>
+              
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
@@ -191,8 +210,7 @@ const SignUp = props => {
             </div>
             <div className={classes.contentBody}>
               <form
-                className={classes.form}
-                onSubmit={handleSignUp}
+                className={classes.form} onSubmit={handleSignUp}
               >
                 <Typography
                   className={classes.title}
@@ -200,56 +218,47 @@ const SignUp = props => {
                 >
                   Create new account
                 </Typography>
-              
+                {loading?<p>Loading... </p>:<p></p>}
+                {error?          
+<                 Alert severity="error">{error.message.split(':')[1]}</Alert>
+               :<p></p>}
                 <TextField
                   className={classes.textField}
-                  error={hasError('username')}
                   fullWidth
-                  helperText={
-                    hasError('username') ? formState.errors.firstName[0] : null
-                  }
                   label="Username"
                   name="username"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.firstName || ''}
+                  value={formState.firstName}
                   variant="outlined"
                 />
                 <TextField
                   className={classes.textField}
-                  error={hasError('fullName')}
                   fullWidth
-                  helperText={
-                    hasError('fullName') ? formState.errors.lastName[0] : null
-                  }
                   label="Full name"
-                  name="fullName"
+                  name="fullname"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.lastName || ''}
+                  value={formState.fullname}
                   variant="outlined"
                 />
                
                 <TextField
                   className={classes.textField}
-                  error={hasError('password')}
                   fullWidth
-                  helperText={
-                    hasError('password') ? formState.errors.password[0] : null
-                  }
                   label="Password"
                   name="password"
                   onChange={handleChange}
                   type="password"
-                  value={formState.values.password || ''}
+                  value={formState.password}
                   variant="outlined"
                 />
                
                 <Button
                   className={classes.signUpButton}
                   color="primary"
-                  disabled={!formState.isValid}
-                  fullWidth
+                  // disabled={!formState.isValid}
+                  fullWidth              
                   size="large"
                   type="submit"
                   variant="contained"
