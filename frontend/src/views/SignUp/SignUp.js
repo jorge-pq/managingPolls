@@ -257,7 +257,6 @@ const SignUp = props => {
                 <Button
                   className={classes.signUpButton}
                   color="primary"
-                  // disabled={!formState.isValid}
                   fullWidth              
                   size="large"
                   type="submit"

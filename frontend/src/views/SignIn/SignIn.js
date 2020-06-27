@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import validate from 'validate';
+import gql from 'graphql-tag';
+import Alert from '@material-ui/lab/Alert';
+import { useMutation } from '@apollo/react-hooks';
 import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
@@ -13,21 +15,6 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-const schema = {
-  email: {
-    presence: { allowEmpty: false, message: 'is required' },
-    email: true,
-    length: {
-      maximum: 64
-    }
-  },
-  password: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 128
-    }
-  }
-};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -123,17 +110,21 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const SignInMutation = gql`
+  mutation SignIn($username: String!,$password: String!) {
+    signIn(username: $username, password:$password)
+  }
+`;
+
 const SignIn = props => {
   const { history } = props;
 
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {}
-  });
+    username:'',
+    password:''
+});
 
  
   const handleBack = () => {
@@ -141,32 +132,31 @@ const SignIn = props => {
   };
 
   const handleChange = event => {
-    event.persist();
-
-    setFormState(formState => ({
+  
+    setFormState({
       ...formState,
-      values: {
-        ...formState.values,
-        [event.target.name]:
-          event.target.type === 'checkbox'
-            ? event.target.checked
-            : event.target.value
-      },
-      touched: {
-        ...formState.touched,
-        [event.target.name]: true
-      }
-    }));
+        [event.target.name]: event.target.value,
+    });
   };
+
+  const [signIn, { loading, error }] = useMutation(SignInMutation, {
+    onError(err) {
+      console.log(err);
+    },
+    onCompleted(data){
+      localStorage.setItem('token',data.signIn);
+      console.log(data.signIn)
+      history.push('/');
+    }
+  });
 
   const handleSignIn = event => {
-    event.preventDefault();
-    history.push('/');
+     event.preventDefault();
+     signIn({ variables: { username: formState.username, password: formState.password }})
+
   };
 
-  const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;
-
+ 
   return (
     <div className={classes.root}>
       <Grid
@@ -226,39 +216,33 @@ const SignIn = props => {
                 >
                   Sign in
                 </Typography>
-            
+                {loading?<p>Loading... </p>:<p></p>}
+                {error?          
+                <Alert severity="error">Invalid username o password</Alert>
+               :<p></p>}
                 <TextField
                   className={classes.textField}
-                  error={hasError('username')}
                   fullWidth
-                  helperText={
-                    hasError('text') ? formState.errors.email[0] : null
-                  }
                   label="Username"
                   name="username"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.email || ''}
+                  value={formState.firstName}
                   variant="outlined"
                 />
                 <TextField
                   className={classes.textField}
-                  error={hasError('password')}
                   fullWidth
-                  helperText={
-                    hasError('password') ? formState.errors.password[0] : null
-                  }
                   label="Password"
                   name="password"
                   onChange={handleChange}
                   type="password"
-                  value={formState.values.password || ''}
+                  value={formState.password}
                   variant="outlined"
                 />
                 <Button
                   className={classes.signInButton}
                   color="primary"
-                  disabled={!formState.isValid}
                   fullWidth
                   size="large"
                   type="submit"
