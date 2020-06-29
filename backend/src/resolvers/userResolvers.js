@@ -9,7 +9,7 @@ export default {
     Query:{
         me: (root, args, { req }, info) => {
 
-            return User.findById(req.user.id)                
+            return User.findOne({'username': req.user.username})                
         },
         users: async (root, args, { req }) => {
             const result = await Auth.userInRol(req.user.username, "ADMIN");
@@ -61,6 +61,9 @@ export default {
             const token = Auth.getToken(user)
             return token
         },
+        changeAvatar: async(root, args, { req }) => {
+                return User.findOneAndUpdate(req.user.username,args)     
+        },    
         changeRol: async(root, args, { req }) => {
             const result = await Auth.userInRol(req.user.username, "ADMIN");
             if (result) {

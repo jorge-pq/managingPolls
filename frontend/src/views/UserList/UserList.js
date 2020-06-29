@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 import { UsersToolbar, UsersTable } from './components';
-import mockData from './data';
+import {
+  Typography
+} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,17 +16,38 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserList = () => {
-  const classes = useStyles();
+const GET_USERS = gql`
+  {
+    users {
+      id
+      username
+      name
+      avatar
+      role
+      email
+    }
+  }
+`;
 
-  const [users] = useState(mockData);
+const UserList = () => {
+
+  const classes = useStyles();
+  const { loading, error, data } = useQuery(GET_USERS);
 
   return (
     <div className={classes.root}>
-      <UsersToolbar />
-      <div className={classes.content}>
-        <UsersTable users={users} />
-      </div>
+      {
+        loading?<div>Loading...</div>:
+        (
+          error?<Typography variant="h1">Not authorized</Typography>:
+          <div>
+            <UsersToolbar />
+            <div className={classes.content}>
+              <UsersTable users={data.users} />
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };

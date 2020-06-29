@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -20,8 +19,8 @@ import {
 } from '@material-ui/core';
 
 import { getInitials } from '../../../../helpers';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+// import gql from 'graphql-tag';
+// import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -43,22 +42,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const GET_USERS = gql`
-  {
-    users {
-      id
-      username
-      name
-    }
-  }
-`;
+// const GET_USERS = gql`
+//   {
+//     users {
+//       id
+//       username
+//       name
+//       avatar
+//       role
+//       email
+//     }
+//   }
+// `;
 
 const UsersTable = props => {
   const { className, users, ...rest } = props;
 
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery(GET_USERS);
+  // const { loading, error, data } = useQuery(GET_USERS);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -106,8 +108,8 @@ const UsersTable = props => {
     setRowsPerPage(event.target.value);
   };
 
-  if (loading) return 'Loading...';
-  if (error) return `Error! ${error.message}`;
+  // if (loading) return 'Loading...';
+  // if (error) return  <Typography variant="h1">Not authorized</Typography>;
 
   return (
    
@@ -133,10 +135,9 @@ const UsersTable = props => {
                     />
                   </TableCell>
                   <TableCell>Name</TableCell>
+                  <TableCell>Username</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Registration date</TableCell>
+                  <TableCell>Role</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -159,22 +160,16 @@ const UsersTable = props => {
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
-                          src={user.avatarUrl}
+                          src={user.avatar}
                         >
                           {getInitials(user.name)}
                         </Avatar>
                         <Typography variant="body1">{user.name}</Typography>
                       </div>
                     </TableCell>
+                    <TableCell>{user.username}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
-                    </TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
-                    </TableCell>
+                    <TableCell>{user.role}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -6,6 +6,7 @@ export default gql`
    username: String!
    password: String!
    name: String!
+   avatar: String
    role: String!
    email: String
    web: String
@@ -32,7 +33,8 @@ export default gql`
   signIn(username: String!, password: String!): String!
   changeRol(username: String!, role: String!): User @auth
   changePassword(passwordOld: String!, passwordNew: String!): User @auth
-  userEdit(username: String!, name:String!,email: String!, web: String!, city: String!, phone: String!, country: String!): User @auth
+  changeAvatar(avatar: String!): User @auth
+  userEdit(username: String!, name:String!,email: String, web: String, city: String, phone: String, country: String): User @auth
   userDelete(id: ID!): User @auth
  }
 `

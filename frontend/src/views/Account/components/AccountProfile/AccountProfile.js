@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -31,20 +31,32 @@ const useStyles = makeStyles(theme => ({
   },
   uploadButton: {
     marginRight: theme.spacing(2)
+  },
+  hide:{
+    display:'none' 
   }
 }));
 
 const AccountProfile = props => {
-  const { className, ...rest } = props;
+  const { className, user, ...rest } = props;
+
+  const [userCurrent, setUserCurrent] = useState(user);
 
   const classes = useStyles();
+  const inputFileRef = useRef(null);
 
-  const user = {
-    name: 'Shen Zhi',
-    city: 'Los Angeles',
-    country: 'USA',
-    timezone: 'GTM-7',
-    avatar: '/images/avatars/avatar_11.png'
+  const OpenDialog = event => {
+    inputFileRef.current.click();
+  };
+
+  const [image, setImage] = useState(userCurrent.avatar);
+  const handleImage = event => {
+    let img = event.target.files[0];
+      let reader = new FileReader();
+      reader.readAsDataURL(img);
+      reader.onload = e => {
+        setImage(e.target.result);
+      }
   };
 
   return (
@@ -59,26 +71,26 @@ const AccountProfile = props => {
               gutterBottom
               variant="h2"
             >
-              John Doe
+              {userCurrent.name}
             </Typography>
             <Typography
               className={classes.locationText}
               color="textSecondary"
               variant="body1"
             >
-              {user.city}, {user.country}
+              {userCurrent.city}{userCurrent.country!=null?",":""} {userCurrent.country}
             </Typography>
             <Typography
               className={classes.dateText}
               color="textSecondary"
               variant="body1"
             >
-              {moment().format('hh:mm A')} ({user.timezone})
+              {moment().format('hh:mm A')}
             </Typography>
           </div>
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={image}
           />
         </div>
         <div className={classes.progress}>
@@ -95,10 +107,12 @@ const AccountProfile = props => {
           className={classes.uploadButton}
           color="primary"
           variant="text"
+          onClick={OpenDialog}
         >
           Upload picture
         </Button>
-        <Button variant="text">Remove picture</Button>
+        <Button variant="text" onClick={()=>setImage()}>Remove picture</Button>
+        <input type="file" className={classes.hide} ref={inputFileRef} onChange={handleImage}/>
       </CardActions>
     </Card>
   );

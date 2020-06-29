@@ -145,8 +145,7 @@ const SignIn = props => {
     },
     onCompleted(data){
       localStorage.setItem('token',data.signIn);
-      console.log(data.signIn)
-      history.push('/');
+      window.location = "/";
     }
   });
 

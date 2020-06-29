@@ -16,7 +16,8 @@ var mongoose = require('mongoose');
 
     await mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify:false
     });
      const app = express();
      app.use(cors());

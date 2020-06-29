@@ -11,6 +11,10 @@ const voteSchema = Schema({
         type: ObjectId,
         ref: 'User'
     },
+    poll: {
+        type: ObjectId,
+        ref: 'Poll'
+    },
 }, { timestamps: true })
 
 export default mongoose.model('Vote', voteSchema) 

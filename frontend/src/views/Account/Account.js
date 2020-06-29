@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Grid } from '@material-ui/core';
-
+import { Grid, Typography } from '@material-ui/core';
 import { AccountProfile, AccountDetails } from './components';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -10,34 +11,58 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const PROFILE = gql`
+  {
+    me{
+    username
+    city
+    avatar
+    country
+    phone
+    name
+    email
+    web
+    phone
+  }
+  }
+`;
+
+
 const Account = () => {
   const classes = useStyles();
-
+  const { loading, error, data } = useQuery(PROFILE);
   return (
     <div className={classes.root}>
-      <Grid
-        container
-        spacing={4}
-      >
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xl={4}
-          xs={12}
+       {
+        loading?<div>Loading...</div>:
+        (
+          error?<Typography variant="h1">Not authorized</Typography>:
+          <Grid
+          container
+          spacing={4}
         >
-          <AccountProfile />
+          <Grid
+            item
+            lg={4}
+            md={6}
+            xl={4}
+            xs={12}
+          >
+            <AccountProfile user={data.me} />
+          </Grid>
+          <Grid
+            item
+            lg={8}
+            md={6}
+            xl={8}
+            xs={12}
+          >
+            <AccountDetails user={data.me}/>
+          </Grid>
         </Grid>
-        <Grid
-          item
-          lg={8}
-          md={6}
-          xl={8}
-          xs={12}
-        >
-          <AccountDetails />
-        </Grid>
-      </Grid>
+        )
+      }
+      
     </div>
   );
 };

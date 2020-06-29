@@ -46,23 +46,27 @@ const Sidebar = props => {
     {
       title: 'Authentication',
       href: '/sign-in',
-      icon: <LockOpenIcon />
+      icon: <LockOpenIcon />,
+      roles:['GUEST']
     },
     {
       title: 'Polls',
       href: '/polls',
-      icon: <DashboardIcon />
+      icon: <DashboardIcon />,
+      roles:['GUEST','USER','POWER USER', 'ADMIN']
     },
     {
       title: 'Users',
       href: '/users',
-      icon: <PeopleIcon />
+      icon: <PeopleIcon />,
+      roles:['ADMIN']
     },
   
     {
       title: 'Administrator',
       href: '/administrator',
-      icon: <SettingsIcon />
+      icon: <SettingsIcon />,
+      roles:['POWER USER', 'ADMIN']
     }
   ];
 

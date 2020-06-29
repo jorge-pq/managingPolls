@@ -48,35 +48,81 @@ const BorderLinearProgress = withStyles({
 
 export default function PollListView(props) {
 
-    const { products } = props;
+    const { polls } = props;
 
+    const [lista, setLista] = useState(polls);
     const classes = useStyles();
-
     const [value, setValue] = useState();
 
     const handleChange = (event) => {
       setValue(event.target.value);
     };
 
+    const [open, setOpen] = useState(true);
+
     const [pollSelected, setPollSelected] = useState();
 
-  const SelectPoll = (product) => {
-    setPollSelected(product);
-  }
+    const SelectPoll = (poll) => {
+      setPollSelected(poll);
+      setOpen(VerifyUser(poll));
+    } 
+
+    const toVote = (poll) => {
+      props.vote(poll, value);
+      let currentPoll = polls.find(d=>d.id==pollSelected.id);
+      let currentOption = currentPoll.options.find(d=>d.id==value);
+      currentOption.votes.push({"user":{"username":props.user}});
+      setValue();
+      setOpen(false);
+      setPollSelected(currentPoll);
+    } 
+
+    function VerifyUser(poll){
+      let currentPoll = polls.find(d=>d.id==poll.id);
+      var i = 0;
+      var flag = false; 
+      while(i<currentPoll.options.length &&!flag){
+        var item = currentPoll.options[i];
+        var j = 0;
+        var aux = false; 
+        while(j<item.votes.length &&!aux){
+          if(item.votes[j].user.username==props.user)
+          {
+            aux = true;
+          }
+          j++;
+        }
+        if(aux){
+          flag = true;
+        }
+        i++;
+      }     
+      return flag?false:true;
+    }
+
+    function getTotal()
+    {
+      var result = 0
+      if(pollSelected!=null){
+        result = pollSelected.options.reduce((a,b)=>(a+b.votes.length),0);
+      }
+      
+      return result>0?result:1;
+    } 
 
     return (
       <Grid container spacing={1}>
         <Grid item xs={6}>
       <List className={classes.root}>
-        {products.map(product => (
+        {lista.map(poll => (
          <div>
-        <Link onClick={()=>SelectPoll(product)} style={{textDecoration:'none',cursor:'pointer'}}>   
+        <Link onClick={()=>SelectPoll(poll)} style={{textDecoration:'none',cursor:'pointer'}}>   
          <ListItem alignItems="flex-start" title="SEE POLL">
           <ListItemAvatar>
-            <Avatar alt="Remy Sharp"  src={product.imageUrl} />
+            <Avatar alt="Remy Sharp"  src={poll.image} />
           </ListItemAvatar>
           <ListItemText
-            primary={product.description}
+            primary={poll.description}
           />
          </ListItem>
          </Link>
@@ -91,7 +137,7 @@ export default function PollListView(props) {
       <CardActionArea>
           <CardMedia
             className={classes.media}
-            image={pollSelected!=null?pollSelected.imageUrl:""}
+            image={pollSelected!=null?pollSelected.image:""}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
@@ -99,36 +145,36 @@ export default function PollListView(props) {
             </Typography>
 
             <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-              <FormControlLabel value="female" control={<Radio />} label="Female" />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel value="other" control={<Radio />} label="Other" />
+            {pollSelected!=null&&open?pollSelected.options.map(option => (
+              <FormControlLabel value={option.id} control={<Radio />} label={option.description} />
+             )):<p></p>}
             </RadioGroup>
            
-            <Typography gutterBottom variant="h5" component="h2">
-              option one 50%
-            </Typography>
-            <BorderLinearProgress
-              className={classes.margin}
-              variant="determinate"
-              color="secondary"
-              value={50}
-            />
-              <Typography gutterBottom variant="h5" component="h2">
-              option two 50%
-            </Typography>
-            <BorderLinearProgress
-              className={classes.margin}
-              variant="determinate"
-              color="secondary"
-              value={50}
-            />
+            {pollSelected!=null?pollSelected.options.map(option => (
+              <div>
+                <Typography gutterBottom variant="h5" component="h2" style={{marginTop:'15px'}}>
+                  {option.description} {(option.votes.length * 100) / getTotal()}%
+                </Typography>
+                <BorderLinearProgress
+                  className={classes.margin}
+                  variant="determinate"
+                  color="secondary"
+                  value={(option.votes.length * 100) / getTotal()}
+                />
+            </div>
+            )):<p>No options</p>}
+              
           </CardContent>
         </CardActionArea>
+        {pollSelected!=null?
         <CardActions>
-          <Button size="small" variant="contained" color="primary">
+           <Button size="small" variant="contained" color="primary"
+            onClick={ () => toVote(pollSelected.id)}
+            style={{display:open?"block":"none"}}
+          >
             Vote
           </Button>
-        </CardActions>
+        </CardActions>:<div></div>}
       </Card>
       </Grid>
 

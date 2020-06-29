@@ -26,10 +26,15 @@ const useStyles = makeStyles(theme => ({
 
 const Topbar = props => {
   const { className, onSidebarOpen, ...rest } = props;
-
+  const { history } = props;
   const classes = useStyles();
 
   const [notifications] = useState([]);
+
+  const signOut = () => {
+    localStorage.removeItem('token');
+    window.location = "/";
+  };
 
   return (
     <AppBar
@@ -49,6 +54,8 @@ const Topbar = props => {
           <IconButton
             className={classes.signOutButton}
             color="inherit"
+            title="SIGNOUT"
+            onClick={signOut}
           >
             <InputIcon />
           </IconButton>

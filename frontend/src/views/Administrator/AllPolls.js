@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
 import { PollsToorbar, PollsTable } from './components';
-import mockData from './data';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
+import {
+  Typography
+} from '@material-ui/core';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,17 +17,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const GET_POLLS = gql`
+  {
+    polls {
+      id
+      description
+    }
+  }
+`;
+
+
+
 export default function AllPolls(props) {
 
   const classes = useStyles();
-  const [users] = useState(mockData);
+  const { loading, error, data } = useQuery(GET_POLLS);
   
     return (
-        <div className={classes.root}>
-          <PollsToorbar />
-        <div className={classes.content}>
-          <PollsTable users={users} />
-        </div>
+      <div className={classes.root}>
+      {
+        loading?<div>Loading...</div>:
+        (
+          error?<Typography variant="h1">Not authorized</Typography>:
+          <div>
+           <PollsToorbar />
+            <div className={classes.content}>
+              <PollsTable polls={data.polls} />
+            </div>
+          </div>
+        )
+      }
       </div>
     );
 }

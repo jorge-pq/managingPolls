@@ -4,13 +4,14 @@ export default gql`
  type Vote{
    id: ID!
    option: Option!
-   user: [User!]!
-   createdAt: String!
-   updateAt: String!
+   user: User!
+   poll: Poll!
+   createdAt: Date!
+   updatedAt: Date!
  }
 
  extend type Mutation {
-  toVote(option: ID!, user: ID!): Vote @auth
+  toVote(poll: ID!, option: ID!, user: String!): Vote @auth
   voteEdit(option: ID!, user: ID!): Vote @auth 
  }
 `

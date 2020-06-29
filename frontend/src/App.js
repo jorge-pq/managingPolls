@@ -10,6 +10,8 @@ import { createBrowserHistory } from 'history';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
 import Routes from './Routes';
+import { Session } from './components'; 
+import jwtDecode from 'jwt-decode';
 
 const browserHistory = createBrowserHistory();
 
@@ -33,15 +35,26 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+
 export default function App() {
+
+  const [session, setSession] = React.useState(
+    localStorage.getItem('token')!=null?jwtDecode(localStorage.getItem('token')).user:
+    {
+      "username":"GUEST",
+      "role":"GUEST"
+    }
+   );
 
   return (
      <ApolloProvider client={client}>
+      <Session.Provider value={{session, setSession}}>
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
           <Routes />
         </Router>
       </ThemeProvider>
+      </Session.Provider>
     </ApolloProvider>
   );
 }

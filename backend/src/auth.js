@@ -52,7 +52,7 @@ export const changePassword = async (username, passwordOld, passwordNew) => {
 export const getToken = async (user) => {
 
     const token = jwt.sign({
-            user: _.pick(user, ['id', 'username']),
+            user: _.pick(user, ['username', 'role']),
         },
         SECRET, {
             expiresIn: '1y',
