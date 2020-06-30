@@ -56,8 +56,9 @@ function CardItem(props) {
     } 
 
     function VerifyUser(){
-      var i = 0;
       var flag = false; 
+      if(props.user!="GUEST"){
+      var i = 0;
       while(i<pollSelect.options.length &&!flag){
         var item = pollSelect.options[i];
         var j = 0;
@@ -73,7 +74,12 @@ function CardItem(props) {
           flag = true;
         }
         i++;
-      }     
+      }    
+    }
+    else
+    {
+      flag = true;
+    } 
       return flag?false:true;
     }
 

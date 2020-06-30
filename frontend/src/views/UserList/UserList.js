@@ -6,6 +6,8 @@ import { UsersToolbar, UsersTable } from './components';
 import {
   Typography
 } from '@material-ui/core';
+import useRoles from '../../components/Roles/useRoles';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,7 +35,7 @@ const UserList = () => {
 
   const classes = useStyles();
   const { loading, error, data } = useQuery(GET_USERS);
-
+  const roles = useRoles();
   return (
     <div className={classes.root}>
       {
@@ -43,7 +45,7 @@ const UserList = () => {
           <div>
             <UsersToolbar />
             <div className={classes.content}>
-              <UsersTable users={data.users} />
+              <UsersTable users={data.users} roles={roles}/>
             </div>
           </div>
         )

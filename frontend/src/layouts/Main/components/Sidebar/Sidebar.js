@@ -56,14 +56,14 @@ const Sidebar = props => {
       roles:['GUEST','USER','POWER USER', 'ADMIN']
     },
     {
-      title: 'Users',
+      title: 'Users management',
       href: '/users',
       icon: <PeopleIcon />,
       roles:['ADMIN']
     },
   
     {
-      title: 'Administrator',
+      title: 'Polls management',
       href: '/administrator',
       icon: <SettingsIcon />,
       roles:['POWER USER', 'ADMIN']

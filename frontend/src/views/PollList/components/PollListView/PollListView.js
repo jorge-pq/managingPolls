@@ -78,25 +78,32 @@ export default function PollListView(props) {
     } 
 
     function VerifyUser(poll){
-      let currentPoll = polls.find(d=>d.id==poll.id);
-      var i = 0;
       var flag = false; 
-      while(i<currentPoll.options.length &&!flag){
-        var item = currentPoll.options[i];
-        var j = 0;
-        var aux = false; 
-        while(j<item.votes.length &&!aux){
-          if(item.votes[j].user.username==props.user)
-          {
-            aux = true;
+      if(props.user!="GUEST"){
+        let currentPoll = polls.find(d=>d.id==poll.id);
+        var i = 0;
+        while(i<currentPoll.options.length &&!flag){
+          var item = currentPoll.options[i];
+          var j = 0;
+          var aux = false; 
+          while(j<item.votes.length &&!aux){
+            if(item.votes[j].user.username==props.user)
+            {
+              aux = true;
+            }
+            j++;
           }
-          j++;
-        }
-        if(aux){
-          flag = true;
-        }
-        i++;
-      }     
+          if(aux){
+            flag = true;
+          }
+          i++;
+        }     
+      }
+      else
+      {
+        flag = true;
+      }
+     
       return flag?false:true;
     }
 

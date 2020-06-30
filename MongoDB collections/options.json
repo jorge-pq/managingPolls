@@ -1,0 +1,90 @@
+{ 
+    "_id" : ObjectId("5efa9e1c8e633f2b8cbf67b5"), 
+    "votes" : [
+
+    ], 
+    "description" : "Real Madrid", 
+    "poll" : ObjectId("5efa9e1c8e633f2b8cbf67b4"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9e1c8e633f2b8cbf67b6"), 
+    "votes" : [
+
+    ], 
+    "description" : "Barcelona", 
+    "poll" : ObjectId("5efa9e1c8e633f2b8cbf67b4"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9e768e633f2b8cbf67b8"), 
+    "votes" : [
+
+    ], 
+    "description" : "Angular", 
+    "poll" : ObjectId("5efa9e768e633f2b8cbf67b7"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9e768e633f2b8cbf67b9"), 
+    "votes" : [
+        ObjectId("5efa9f3b8e633f2b8cbf67c2")
+    ], 
+    "description" : "ReacJs", 
+    "poll" : ObjectId("5efa9e768e633f2b8cbf67b7"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9e768e633f2b8cbf67ba"), 
+    "votes" : [
+
+    ], 
+    "description" : "VueJs", 
+    "poll" : ObjectId("5efa9e768e633f2b8cbf67b7"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9eca8e633f2b8cbf67bc"), 
+    "votes" : [
+
+    ], 
+    "description" : "Donald Trump", 
+    "poll" : ObjectId("5efa9eca8e633f2b8cbf67bb"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9eca8e633f2b8cbf67bd"), 
+    "votes" : [
+
+    ], 
+    "description" : "Joe Bidden", 
+    "poll" : ObjectId("5efa9eca8e633f2b8cbf67bb"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9f0a8e633f2b8cbf67bf"), 
+    "votes" : [
+
+    ], 
+    "description" : "Iphone", 
+    "poll" : ObjectId("5efa9f0a8e633f2b8cbf67be"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9f0a8e633f2b8cbf67c0"), 
+    "votes" : [
+
+    ], 
+    "description" : "Huawei ", 
+    "poll" : ObjectId("5efa9f0a8e633f2b8cbf67be"), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5efa9f0a8e633f2b8cbf67c1"), 
+    "votes" : [
+
+    ], 
+    "description" : "Samsung", 
+    "poll" : ObjectId("5efa9f0a8e633f2b8cbf67be"), 
+    "__v" : NumberInt(0)
+}

@@ -27,14 +27,21 @@ export const ensureSignedIn = req => {
     }
 }
 
-export const userInRol = async (username, role) => {
+export const userInRol = async (username, roles) => {
 
     const user = await User.findOne({ username })
-    if(user.role==role) {
-        return true
-    } else {
-        return false
+    var result = false;
+    var i = 0
+    var flag = false
+    while(i<roles.length && !flag){
+        if(user.role==roles[i]) {
+            result = true
+            flag = true;
+        }
+        i++;
     }
+   
+   return result;
 }
 
 export const changePassword = async (username, passwordOld, passwordNew) => {
@@ -69,7 +76,7 @@ export const Roles = [{
     ,
     {
         name: 'POWER USER',
-        description: 'Usuario con privilegios de gestionar encuestas',
+        description: 'Usuario con privilegios para gestionar encuestas',
     },
     {
         name: 'ADMIN',

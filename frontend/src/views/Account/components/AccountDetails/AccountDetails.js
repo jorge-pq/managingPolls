@@ -21,14 +21,7 @@ const useStyles = makeStyles(() => ({
 
 const UserEditMutation = gql`
   mutation UserEdit($username: String!,$name: String!,$city: String,$country: String,$phone: String,$web: String,$email: String) {
-    userEdit(username: $username, name: $name, city:$city, country:$country, phone:$phone, web:$web, email:$email) {
-      name
-      city
-      country
-      phone
-      web
-      email
-    }
+    userEdit(username: $username, name: $name, city:$city, country:$country, phone:$phone, web:$web, email:$email)
   }
 `;
 

@@ -19,7 +19,7 @@ export default {
     Mutation: {
         optionCreate: async (root, args, { req }) => {
 
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN", "POWER USER"]);
             if (result) {
                 const option = await Option.create(args)
                 return option
@@ -29,7 +29,7 @@ export default {
             }
         },
         optionEdit: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN", "POWER USER"]);
             if (result) {
                 if (!mongoose.Types.ObjectId.isValid(args.id)) {
                     throw new UserInputError(`${id} is not a valid option ID.`)
@@ -42,7 +42,7 @@ export default {
             }
         },
         optionDelete: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN", "POWER USER"]);
             if (result) {
                 if (!mongoose.Types.ObjectId.isValid(args.id)) {
                     throw new UserInputError(`${id} is not a valid option ID.`)

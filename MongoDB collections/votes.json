@@ -1,0 +1,9 @@
+{ 
+    "_id" : ObjectId("5efa9f3b8e633f2b8cbf67c2"), 
+    "poll" : ObjectId("5efa9e768e633f2b8cbf67b7"), 
+    "option" : ObjectId("5efa9e768e633f2b8cbf67b9"), 
+    "user" : ObjectId("5ef6f2238200792d58bc6121"), 
+    "createdAt" : ISODate("2020-06-30T02:11:07.297+0000"), 
+    "updatedAt" : ISODate("2020-06-30T02:11:07.297+0000"), 
+    "__v" : NumberInt(0)
+}

@@ -31,10 +31,10 @@ export default gql`
  extend type Mutation {
   signUp(name: String!, username: String!, password: String!,email: String, web: String, city: String, phone: String, country: String): User
   signIn(username: String!, password: String!): String!
-  changeRol(username: String!, role: String!): User @auth
+  changeRol(username: String!, role: String!): String! @auth
   changePassword(passwordOld: String!, passwordNew: String!): User @auth
-  changeAvatar(avatar: String!): User @auth
-  userEdit(username: String!, name:String!,email: String, web: String, city: String, phone: String, country: String): User @auth
+  changeAvatar(avatar: String!): String @auth
+  userEdit(username: String!, name:String!,email: String, web: String, city: String, phone: String, country: String): String @auth
   userDelete(id: ID!): User @auth
  }
 `

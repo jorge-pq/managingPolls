@@ -1,0 +1,40 @@
+{ 
+    "_id" : ObjectId("5ef50f4bf79cf020e0525d2d"), 
+    "role" : "USER", 
+    "name" : "Jorge Pozo", 
+    "username" : "jpozo", 
+    "password" : "$2a$10$OXxd2aDJnt4.PiHOUuMey.11STPpzAdrSAAHjy4zcoFZ60Gnsxthi", 
+    "createdAt" : ISODate("2020-06-25T20:55:40.000+0000"), 
+    "updatedAt" : ISODate("2020-06-30T01:09:46.617+0000"), 
+    "__v" : NumberInt(0), 
+    "city" : "La Habana", 
+    "country" : null, 
+    "phone" : null, 
+    "web" : null, 
+    "email" : null
+}
+{ 
+    "_id" : ObjectId("5ef6f2238200792d58bc6121"), 
+    "role" : "ADMIN", 
+    "name" : "Administrator", 
+    "username" : "admin", 
+    "password" : "$2a$10$1pzGxBUCZpdUnjKgZQhaz.CqwDwunnOwnfycJEfVOjrVt0mRJCanS", 
+    "createdAt" : ISODate("2020-06-27T07:15:47.504+0000"), 
+    "updatedAt" : ISODate("2020-06-30T01:24:36.908+0000"), 
+    "__v" : NumberInt(0), 
+    "web" : "admin.com", 
+    "country" : null, 
+    "phone" : null, 
+    "city" : "San Francisco", 
+    "email" : null
+}
+{ 
+    "_id" : ObjectId("5ef7838c681be6108c4e97cf"), 
+    "role" : "POWER USER", 
+    "name" : "Alfred Manfredi", 
+    "username" : "alfred", 
+    "password" : "$2a$10$Kns7h.ckUf0bkEGhhkkJzePqbxmiTanNh1espYWhdNYahL7mqqd1O", 
+    "createdAt" : ISODate("2020-06-27T17:36:13.038+0000"), 
+    "updatedAt" : ISODate("2020-06-30T00:43:43.959+0000"), 
+    "__v" : NumberInt(0)
+}

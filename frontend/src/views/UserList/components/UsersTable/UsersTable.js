@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
+import { Link } from 'react-router-dom';
+import EditRounded from '@material-ui/icons/EditRounded';
 import {
   Card,
   CardActions,
@@ -11,16 +13,26 @@ import {
   Checkbox,
   Table,
   TableBody,
+  Tooltip,
   TableCell,
   TableHead,
   TableRow,
   Typography,
   TablePagination
 } from '@material-ui/core';
-
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import { getInitials } from '../../../../helpers';
-// import gql from 'graphql-tag';
-// import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -39,32 +51,44 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: 'flex-end'
-  }
+  },
+  icon:{
+    color: '#1259b5'
+  },
+   container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
-// const GET_USERS = gql`
-//   {
-//     users {
-//       id
-//       username
-//       name
-//       avatar
-//       role
-//       email
-//     }
-//   }
-// `;
+const ChangeRoleMutation = gql`
+  mutation ChangeRol($username: String!,$role: String!) {
+    changeRol(username: $username, role: $role) {
+      username
+    }
+  }
+`;
+
 
 const UsersTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, users, roles, ...rest } = props;
 
   const classes = useStyles();
-
-  // const { loading, error, data } = useQuery(GET_USERS);
-
+  const [open, setOpen] = React.useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+
+  const [userSelected, setUserSelected] = useState();
+
+  const [roleSelected, setRoleSelected] = useState(0);
+  const handleRoleSelected = event => {
+    setRoleSelected(event.target.value);
+  };
 
   const handleSelectAll = event => {
     const { users } = props;
@@ -108,11 +132,31 @@ const UsersTable = props => {
     setRowsPerPage(event.target.value);
   };
 
-  // if (loading) return 'Loading...';
-  // if (error) return  <Typography variant="h1">Not authorized</Typography>;
+  const handleClickOpen = (username) => {
+    setOpen(true);
+    setUserSelected(username);
+    console.log(username);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [changeRol, { loading, error }] = useMutation(ChangeRoleMutation, {
+    onError(err) {
+      console.log(err);
+    },
+    onCompleted(){
+      window.location = "/users";
+    }
+  });
+ 
+  const handleChangeRole = () => {
+     changeRol({ variables: { username: userSelected, role: roleSelected }})
+  };
 
   return (
-   
+   <div>
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -138,6 +182,7 @@ const UsersTable = props => {
                   <TableCell>Username</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Role</TableCell>
+                  <TableCell>Change role</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -170,6 +215,13 @@ const UsersTable = props => {
                     <TableCell>{user.username}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.role}</TableCell>
+                    <TableCell>
+                    <Tooltip title="Change role">
+                      <Link onClick={()=>handleClickOpen(user.username)} className={classes.icon}>    
+                          <EditRounded />
+                      </Link>
+                    </Tooltip>  
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -189,6 +241,42 @@ const UsersTable = props => {
         />
       </CardActions>
     </Card>
+
+
+    <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+        <DialogTitle>Select role</DialogTitle>
+        <DialogContent>
+          <form className={classes.container}>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="demo-dialog-select-label">Role</InputLabel>
+              <Select
+                labelId="demo-dialog-select-label"
+                id="demo-dialog-select"
+                value={roleSelected}
+                onChange={handleRoleSelected}
+                input={<Input />}
+              >
+                {
+                  roles.map(role=>
+                    <MenuItem value={role.name}>{role.name}</MenuItem>
+                    )
+                }           
+              
+              </Select>
+            </FormControl>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleChangeRole} color="primary">
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+    </div>
   );
 };
 

@@ -133,7 +133,7 @@ const PollsToorbar = props => {
         <DialogContent>
           <DialogContentText>
            {loading?<p>Loading... </p>:<p></p>}
-           {error?<p>Error </p>:<p></p>}
+            {error?<p>Error</p>:<p></p>}
           </DialogContentText>
           
           <Grid container spacing={3}> 

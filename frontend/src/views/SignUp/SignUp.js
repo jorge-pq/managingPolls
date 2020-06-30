@@ -16,7 +16,6 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { onError } from 'apollo-link-error';
 
 
 const useStyles = makeStyles(theme => ({

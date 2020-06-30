@@ -19,8 +19,8 @@ import {
   TableRow,
   TablePagination
 } from '@material-ui/core';
-
-import { getInitials } from '../../../../helpers';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -44,6 +44,14 @@ const useStyles = makeStyles(theme => ({
     color: '#1259b5'
   }
 }));
+
+const DeletePollMutation = gql`
+  mutation PollDelete($id: ID!) {
+    pollDelete(id: $id) {
+      description
+    }
+  }
+`;
 
 const PollsTable = props => {
   const { className, polls, ...rest } = props;
@@ -96,6 +104,20 @@ const PollsTable = props => {
     setRowsPerPage(event.target.value);
   };
 
+  const [pollDelete, { loading, error }] = useMutation(DeletePollMutation, {
+    onError(err) {
+      console.log(err);
+    },
+    onCompleted(){
+      window.location = "/administrator";
+    }
+  });
+ 
+
+  const handleDelete = (id) => {
+    pollDelete({ variables: { id: id }})
+  };
+
   return (
     <Card
       {...rest}
@@ -141,13 +163,8 @@ const PollsTable = props => {
                 
                     <TableCell>{poll.description}</TableCell>
                     <TableCell>
-                    <Tooltip title="Editar">
-                      <Link to={'/s'+ poll.id} className={classes.icon}>    
-                          <EditRounded />
-                      </Link>
-                    </Tooltip>  
                     <Tooltip title="Eliminar">
-                      <Link to={'/d'+ poll.id} className={classes.icon}>    
+                      <Link onClick={()=>handleDelete(poll.id)} className={classes.icon}>    
                           <DeleteRounded />
                       </Link>
                     </Tooltip>  

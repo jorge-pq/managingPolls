@@ -12,7 +12,7 @@ export default {
             return User.findOne({'username': req.user.username})                
         },
         users: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN"]);
             if (result) {
                 return User.find({})
 
@@ -22,7 +22,7 @@ export default {
             }
         },
         user: async (root, { id }, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN"]);
             if (result) {
                 if(!mongoose.Types.ObjectId.isValid(id)){
                     throw new UserInputError(`${id} is not a valid user ID.`)
@@ -35,7 +35,7 @@ export default {
            
         },
         roles: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN"]);
             if (result) {
                 return Auth.Roles
             }
@@ -62,28 +62,32 @@ export default {
             return token
         },
         changeAvatar: async(root, args, { req }) => {
-                return User.findOneAndUpdate(req.user.username,args)     
+            const user = await User.update({'username':args.username},{'avatar':args.avatar})
+
+            return "Avatar updated!"   
         },    
         changeRol: async(root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN"]);
             if (result) {
-                return User.findOneAndUpdate(args.username,args)
+                const user = await User.update({'username':args.username},{'role':args.role})
+
+                 return "Role updated!"
             }
             else {
                 throw new AuthenticationError('Usted no es administrador del sitio.')
-            }       
-            
+            }                 
         },    
         changePassword: async (root, args, { req }) => {
 
             await Joi.validate(args, changePass, { abortEarly: false })
             return Auth.changePassword(req.user.username,args.passwordOld, args.passwordNew)
         },
-        userEdit:(root,  args) => {
-            return User.findOneAndUpdate(args.username,args)
+        userEdit: async (root,  args) => {
+            const user = await User.update({'username':args.username},args)
+            return "User updated!"
         },
         userDelete: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN"]);
             if (result) {
                 return User.findByIdAndRemove(args.id)
             }

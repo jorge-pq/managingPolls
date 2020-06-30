@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 import { UserInputError, AuthenticationError } from 'apollo-server-express'
-import { Poll } from '../models'
-import { Option } from '../models'
+import { Poll, Option, Vote } from '../models'
 import * as Auth from '../auth'
 
 export default {
@@ -20,7 +19,7 @@ export default {
     Mutation: {
         pollCreate: async (root, args, { req }) => {
 
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN", "POWER USER"]);
             if (result) {
                 const parameters = { "description":args.description, "image": args.image} 
                 const poll = await Poll.create(parameters)
@@ -36,7 +35,7 @@ export default {
             }
         },
         pollEdit: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN", "POWER USER"]);
             if (result) {
                 if (!mongoose.Types.ObjectId.isValid(args.id)) {
                     throw new UserInputError(`${id} is not a valid poll ID.`)
@@ -49,12 +48,14 @@ export default {
             }
         },
         pollDelete: async (root, args, { req }) => {
-            const result = await Auth.userInRol(req.user.username, "ADMIN");
+            const result = await Auth.userInRol(req.user.username, ["ADMIN", "POWER USER"]);
             if (result) {
                 if (!mongoose.Types.ObjectId.isValid(args.id)) {
                     throw new UserInputError(`${id} is not a valid poll ID.`)
                 }
                 const poll = await Poll.findByIdAndRemove(args.id)
+                await Option.remove({'poll':args.id})
+                await Vote.remove({'poll':args.id})
                 return poll
             }
             else {
